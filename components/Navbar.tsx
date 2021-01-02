@@ -55,7 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                            aria-current="page"
                         >
                            <i className="fas fa-user"></i>
-                           Sign IN
+                           Sign In
                         </a>
                      </Link>
                   </li>
