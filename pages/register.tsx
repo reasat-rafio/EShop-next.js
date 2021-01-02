@@ -1,6 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
+import { useCtx } from "../store/GlobalState";
+import { postData } from "../utils/fetchData";
 import valid from "../utils/valid";
 
 interface userInterface {
@@ -15,16 +17,34 @@ const Register = () => {
    const [userData, setUserData] = useState<userInterface>(initialState);
    const { name, email, password, cf_password } = userData;
 
+   const [state, dispatch] = useCtx();
+
    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       setUserData({ ...userData, [name]: value });
    };
 
-   const handleSubmit = (e: any) => {
+   const handleSubmit = async (e: any) => {
       e.preventDefault();
 
       const errMsg = valid(name, email, password, cf_password);
-      if (errMsg) console.log(errMsg);
+      if (errMsg)
+         return dispatch({
+            type: "NOTIFY",
+            payload: { error: errMsg },
+         });
+
+      dispatch({
+         type: "NOTIFY",
+         payload: { loading: true },
+      });
+
+      const res = await postData("auth/register", userData, 123);
+
+      if (res.err)
+         return dispatch({ type: "NOTIFY", payload: { error: res.err } });
+
+      return dispatch({ type: "NOTIFY", payload: { success: res.msg } });
    };
 
    return (

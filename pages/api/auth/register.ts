@@ -21,6 +21,12 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       const errMsg = valid(name, email, password, cf_password);
       if (errMsg) return res.status(400).json({ err: errMsg });
 
+      const user = await User.findOne({ email });
+      if (user)
+         return res
+            .status(400)
+            .json({ err: "This Email is already registerd" });
+
       const passwordHash = await bycript.hash(password, 12);
 
       const newUser = await User.create({

@@ -4,7 +4,7 @@ const valid = (
    password: string,
    cf_password: string
 ) => {
-   if (!name || !email || !password) {
+   if (!name || !email || !password || !cf_password) {
       return "Please add all fields";
    }
 
