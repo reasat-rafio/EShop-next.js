@@ -5,7 +5,7 @@ interface actionInterface {
    payload: any;
 }
 
-export default (state, action: actionInterface) => {
+const Reducer = (state, action: actionInterface) => {
    switch (action.type) {
       case ACTIONS.NOTIFY:
          return {
@@ -16,10 +16,12 @@ export default (state, action: actionInterface) => {
       case ACTIONS.AUTH:
          return {
             ...state,
-            notauthify: action.payload,
+            auth: action.payload,
          };
 
       default:
          return state;
    }
 };
+
+export default Reducer;

@@ -10,6 +10,8 @@ export const getData = async (url: string, token) => {
    });
 
    const data = await res.json();
+   console.log(data);
+
    return data;
 };
 
