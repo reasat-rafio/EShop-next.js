@@ -38,7 +38,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       const newUser = await User.create({
          name,
          email,
-         passwordHash,
+         password: passwordHash,
          cf_password,
       });
 
