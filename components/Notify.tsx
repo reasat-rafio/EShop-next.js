@@ -3,7 +3,7 @@ import Loading from "./Loading";
 import Toast from "./Toast";
 
 const Notify = () => {
-   const [state, dispatch] = useCtx();
+   const { state, dispatch } = useCtx();
    const { notify } = state;
 
    console.log(notify);

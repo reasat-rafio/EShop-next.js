@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useCtx } from "../store/GlobalState";
+import Cookies from "js-cookie";
 
 interface NavbarProps {}
 
 export const Navbar: React.FC<NavbarProps> = ({}) => {
    const router = useRouter();
+
+   const {
+      state: { auth },
+      dispatch,
+   } = useCtx();
 
    const isActive = (r: string) => {
       if (r === router.pathname) {
@@ -12,6 +19,60 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
       } else {
          return "";
       }
+   };
+
+   const handleLogout = () => {
+      Cookies.remove("refreshtoken", { path: "api/auth/accessToken" });
+      localStorage.removeItem("firstLogin");
+      dispatch({
+         type: "AUTH",
+         payload: {},
+      });
+      dispatch({
+         type: "NOTIFY",
+         payload: { success: "Logged Out" },
+      });
+   };
+
+   const loggedRouter = () => {
+      return (
+         <li className="nav-item dropdown">
+            <a
+               className="nav-link dropdown-toggle"
+               id="navbarDropdownMenuLink"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false"
+            >
+               <img
+                  src={auth.user.avatar}
+                  alt="pic"
+                  style={{
+                     borderRadius: "50%",
+                     width: "30px",
+                     transform: "translateY(-3px)",
+                     margin: "3px",
+                  }}
+               />
+               {auth.user.name}
+            </a>
+            <ul
+               className="dropdown-menu"
+               aria-labelledby="navbarDropdownMenuLink"
+            >
+               <li>
+                  <a className="dropdown-item" href="#">
+                     Profile
+                  </a>
+               </li>
+               <li>
+                  <a onClick={handleLogout} className="dropdown-item" href="#">
+                     Logout
+                  </a>
+               </li>
+            </ul>
+         </li>
+      );
    };
 
    return (
@@ -48,44 +109,21 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                      </Link>
                   </li>
 
-                  <li className="nav-item">
-                     <Link href="/signin">
-                        <a
-                           className={"nav-link" + isActive("/signin")}
-                           aria-current="page"
-                        >
-                           <i className="fas fa-user"></i>
-                           Sign In
-                        </a>
-                     </Link>
-                  </li>
-
-                  {/* <li className="nav-item dropdown">
-                     <a
-                        className="nav-link dropdown-toggle"
-                        id="navbarDropdownMenuLink"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                     >
-                        User Name
-                     </a>
-                     <ul
-                        className="dropdown-menu"
-                        aria-labelledby="navbarDropdownMenuLink"
-                     >
-                        <li>
-                           <a className="dropdown-item" href="#">
-                              Profile
+                  {Object.keys(auth).length === 0 ? (
+                     <li className="nav-item">
+                        <Link href="/signin">
+                           <a
+                              className={"nav-link" + isActive("/signin")}
+                              aria-current="page"
+                           >
+                              <i className="fas fa-user"></i>
+                              Sign In
                            </a>
-                        </li>
-                        <li>
-                           <a className="dropdown-item" href="#">
-                              Logout
-                           </a>
-                        </li>
-                     </ul>
-                  </li> */}
+                        </Link>
+                     </li>
+                  ) : (
+                     loggedRouter()
+                  )}
                </ul>
             </div>
          </div>

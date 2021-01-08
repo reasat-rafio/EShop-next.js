@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "../../../utils/connectDB";
 import User from "../../../models/userModels";
 import valid from "../../../utils/valid";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
 
 connectDB();
 
@@ -28,17 +28,12 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
             .json({ err: "This Email is already registerd" });
 
       // Hasing the password
-
-      // const genSalt = await bcrypt.genSalt();
-      // const passwordHash = bcrypt.hashSync(password, genSalt);
-      // console.log(passwordHash);
-
-      const passwordHash = await bcrypt.hash(password, 12);
+      // const passwordHash = await bcrypt.hash(password, 12);
 
       const newUser = await User.create({
          name,
          email,
-         password: passwordHash,
+         password,
          cf_password,
       });
 

@@ -17,7 +17,7 @@ const Register = () => {
    const [userData, setUserData] = useState<userInterface>(initialState);
    const { name, email, password, cf_password } = userData;
 
-   const [state, dispatch] = useCtx();
+   const { state, dispatch } = useCtx();
 
    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
